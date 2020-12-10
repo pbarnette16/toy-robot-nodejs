@@ -10,7 +10,6 @@
   / \______/ \/
  /    /__\
 (\   /____\
-
 ```
 
 The application is a simulation of a toy robot moving on a square table top, of dimensions 5 units x 5 units. There are no other obstructions on the table surface. The robot is free to roam around the surface of the table, but must be prevented from falling to destruction. Any movement that would result in the robot falling from the table must be prevented, however further valid movement commands must still be allowed.
@@ -18,19 +17,23 @@ The application is a simulation of a toy robot moving on a square table top, of 
 
   |  |  0 | 1  | 2  |  3 | 4  |
   |---|---|---|---|---|---|
-  4 |   |   |   |   |   |   |
-  3 |   | Robot (1,3)  |   |   |   |   |
+  4 |  |   |       |       |      |      |
+  3 |   | R  |   |   |   |   |
   2 |   |   |   |   |   |   |
   1 |   |   |   |   |   |   |
   0 |   |   |   |   |   |   |
        
+R is the location of the robot in this case (1,3)
 
-The robot takes the following commands:
+
+### The robot takes the following commands:
 - [Place](#place)
 - [Move](#move)
 - [Left](#left)
 - [Right](#right)
 - [Report](#report)
+
+Any commands given that are not listed above will be ignored along with any commands that would put the robot in peril.
 
 ## Place
 
@@ -67,31 +70,17 @@ Place will put the robot onto the board. If the location and direction given to 
 All other commands given to the robot will result in the robot ignoring your commands. Its not very smart, you see.
 
 
+#### Development Directions
+
+This project is done as a command line interface in able to allow the developer to have a bit of interactivity. As a front-end developer it feels strange to me to not have some kind of interface. More about this will be discussed later.
+
+
 ## Available Scripts
 
 In the project directory, you can run:
 
 ### `yarn start`
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
-
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
-
 ### `yarn test`
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `yarn build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-
+Launches the test runner in the interactive watch mode.
