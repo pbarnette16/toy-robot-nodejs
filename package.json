@@ -12,7 +12,9 @@
   "author": "Paul Barnette",
   "license": "ISC",
   "dependencies": {
-    "commander": "^6.2.0"
+    "chalk": "^4.1.0",
+    "commander": "^6.2.0",
+    "node-typewriter": "^0.0.2"
   },
   "devDependencies": {
     "jest": "^26.6.3"
