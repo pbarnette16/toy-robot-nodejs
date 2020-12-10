@@ -18,11 +18,11 @@ The application is a simulation of a toy robot moving on a square table top, of 
 
   |  |  0 | 1  | 2  |  3 | 4  |
   |---|---|---|---|---|---|
-  0 |   |   |   |   |   |   |
-  1 |   | R  |   |   |   |   |
-  2 |   |   |   |   |   |   |
-  3 |   |   |   |   |   |   |
   4 |   |   |   |   |   |   |
+  3 |   | Robot (1,3)  |   |   |   |   |
+  2 |   |   |   |   |   |   |
+  1 |   |   |   |   |   |   |
+  0 |   |   |   |   |   |   |
        
 
 The robot takes the following commands:
