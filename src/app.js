@@ -8,11 +8,12 @@ const defaultConfig = config.development;
 const environment = process.env.NODE_ENV || 'development';
 
 /* Objects brought into the project */
-const validation = require('./util/validation.js');
+const validation = require('./util/validation');
 let Grid = require('./components/Grid');
-let Messaging = require('./util/messaging.js');
+let Messaging = require('./util/messaging');
 const Help = require('./util/Help');
-const EventEmitter = require('events').EventEmitter;
+let {welcomeDescription} = require('./util/welcome');
+let Robot = require('./components/Robot')
 
 
 /**
@@ -20,6 +21,21 @@ const EventEmitter = require('events').EventEmitter;
  */
 const readInput = () => {
   let stdin = process.openStdin();
+  // create grid
+  const grid = new Grid.Grid(defaultConfig.grid[0], defaultConfig.grid[1]);
+  let robot = null;
+
+  // pubsub call for letting the user know about the grid
+  Messaging.emit("normal",grid.sizeStr());
+
+  try {
+    robot = new Robot.Robot(grid.dimensions())
+  }
+  catch(e) {
+    Messaging.emit("error", e.data.message);
+    return;
+  }
+  
 
   stdin.addListener('data', function(d) {
     let command = d
@@ -27,6 +43,15 @@ const readInput = () => {
       .trim()
       .toUpperCase();
 
+      try {
+
+      }
+      catch(e) {
+          Messaging.emit()
+      }  
+
+
+      //console.log(command)
 
   });
 };
@@ -36,8 +61,8 @@ const readInput = () => {
  * To initialize this program
  */
 const init = () => {
-  //explainer.printHeader();
-  //explainer.printDescription();
+  
+    welcomeDescription()
 
     //console.log(Grid.sizeStr())
     //console.log(Grid.dimensions())
@@ -45,16 +70,11 @@ const init = () => {
       
     // create a new grid based on the configuration
     //console.log(new Grid.Grid(defaultConfig.grid[0], defaultConfig.grid[1]))
-    const grid = new Grid.Grid(defaultConfig.grid[0], defaultConfig.grid[1]);
-
-
-    // pubsub call for letting the user know about the grid
-    Messaging.emit("normal",grid.sizeStr());  
     
     // Calls program help
-    Help.displayHelp()
+    //Help.displayHelp()
 
-    console.log(defaultConfig)
+    //console.log(defaultConfig)
     readInput();
 };
 
