@@ -22,21 +22,15 @@ function isValidDirection(req) {
     } ) || false
 }
 
-// is robot placed
-
-function isRobotPlaced() {
-    return false;
-}
-
 // is grid position valid
-
-function isGridPositionValid(req) {
+function isGridPositionValid(req, gridDim) {
     return false;
 }
 
 const Validation = {
     isValidCommand: isValidCommand,
-    isValidDirection: isValidDirection
+    isValidDirection: isValidDirection,
+    isGridPositionValid: isGridPositionValid
 }
 
 module.exports = Validation;

@@ -29,7 +29,7 @@ class Help  {
        })
     
        // calls the normal text display for the string using pub/sub
-       Messaging.emit("normal", outputstring);
+       return Messaging.emit("normal", "\n\n"+outputstring);
        //Messaging.emit("announce", outputstring);
     }
 
