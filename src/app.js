@@ -47,7 +47,15 @@ const readInput = () => {
 
       try {
           if(Validation.isValidCommand(command)){
-            robot.emit("commandController", command)
+            if(!Validation.isHelpCommand(command)) {
+                // sends the command to the robot to process
+                robot.emit("commandController", command)
+            }
+            else {
+                // Calls program help
+                Help.displayHelp()
+            }
+              
           }
           else {
             Messaging.emit("error", "Did you really think that command would work on me?")
@@ -78,9 +86,6 @@ const init = () => {
       
     // create a new grid based on the configuration
     //console.log(new Grid.Grid(defaultConfig.grid[0], defaultConfig.grid[1]))
-    
-    // Calls program help
-    //Help.displayHelp()
 
     //console.log(defaultConfig)
     readInput();
