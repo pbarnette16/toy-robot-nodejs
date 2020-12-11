@@ -26,10 +26,16 @@ function isGridPositionValid(req, gridDim) {
     return false;
 }
 
+function isHelpCommand(req) {
+    return "HELP" === req
+}
+
+// creates a validaiton object to be exported and namespace the functions
 const Validation = {
     isValidCommand: isValidCommand,
     isValidDirection: isValidDirection,
-    isGridPositionValid: isGridPositionValid
+    isGridPositionValid: isGridPositionValid,
+    isHelpCommand: isHelpCommand
 }
 
 module.exports = Validation;

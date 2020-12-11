@@ -56,9 +56,19 @@ class Robot extends EventEmitter{
         return this.onGrid;
     }
 
-    commandController(command) {
+    commandController(robotInput) {
         debugger
-        console.log("command controller %s %o", command, Commands)
+        //console.log("command controller %s %o", robotInput, Commands)
+        if(Validation.isValidCommand(robotInput)) {
+            let currentAction = Commands.commands.find((obj) => {
+                return obj.command === req.split(' ')[0]
+            })
+            console.log("currentAction %o", currentAction)
+        }
+        else {
+            throw new Error("You didn't think you'd slip that command past me did you?")
+        }
+
     }
 
     placeRobot(command) {
