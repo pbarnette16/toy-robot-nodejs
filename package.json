@@ -7,7 +7,9 @@
     "toy-robot": "./src/app.js"
   },
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "test-watch": "jest --watch",
+    "app": "node ./src/app.js"
   },
   "author": "Paul Barnette",
   "license": "ISC",
