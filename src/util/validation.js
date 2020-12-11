@@ -7,8 +7,7 @@ const move = require('./move.js')
 // returns the object if it is found otherwise returns false
 function isValidCommand(req) {
    return command.commands.find((obj) => {
-       console.log(obj.command === req)
-        return obj.command === req
+        return obj.command === req.split(' ')[0]
     }) || false;
 }
 

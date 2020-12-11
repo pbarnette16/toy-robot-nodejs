@@ -15,6 +15,8 @@ const Help = require('./util/Help');
 let {welcomeDescription} = require('./util/welcome');
 let Robot = require('./components/Robot')
 
+const Validation = require("./util/validation")
+
 
 /**
  * To receive input command from user continuously, until user explicity terminate the program
@@ -32,7 +34,7 @@ const readInput = () => {
     robot = new Robot.Robot(grid.dimensions())
   }
   catch(e) {
-    Messaging.emit("error", e.data.message);
+    Messaging.emit("error", e.message);
     return;
   }
   
@@ -44,10 +46,16 @@ const readInput = () => {
       .toUpperCase();
 
       try {
-
+          if(Validation.isValidCommand(command)){
+            robot.emit("commandController", command)
+          }
+          else {
+            Messaging.emit("error", "Did you really think that command would work on me?")
+          }
+            
       }
       catch(e) {
-          Messaging.emit()
+          Messaging.emit("error", "Something screwed up.")
       }  
 
 

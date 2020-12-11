@@ -9,7 +9,8 @@
   "scripts": {
     "test": "jest",
     "test-watch": "jest --watch",
-    "app": "node ./src/app.js"
+    "app": "node ./src/app.js",
+    "debug": "node --inspect-brk ./src/app.js "
   },
   "author": "Paul Barnette",
   "license": "ISC",

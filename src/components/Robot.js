@@ -1,9 +1,9 @@
 "use strict";
 
-const { dim } = require("chalk");
 const Messaging = require("../util/messaging");
 const EventEmitter = require('events').EventEmitter;
-const Validation = require("./util/validation")
+const Validation = require("../util/validation");
+const Commands = require('../util/command')
 
 // Robot
 // Created as a singleton as there is only one robot on the field at any one point
@@ -27,12 +27,21 @@ class Robot extends EventEmitter{
     }
 
     set gridSize(dimensions) {
-        if(dimensions.x > 0 && dimensions.y > 0) {
-            this.gridSizeObj[0] = dimensions.x;
-            this.gridSizeObj[1] = dimensions.y;
+        //console.log(`${dimensions} ${dimensions.hasOwnProperty('x')} ${dimensions.hasOwnProperty('y')}`)
+        try {
+
+            if(dimensions.x > 0 && dimensions.y > 0) {
+              this.gridSizeObj[0] = dimensions.x;
+              this.gridSizeObj[1] = dimensions.y;
+           }
+           else
+            throw new Error("You have not set a valid grid. Try again")
+                
         }
-        else
-            throw new Error("I cant move on that size grid. Please")
+        catch(e) {
+            throw new Error("You have not set a valid grid. Try again")
+        }
+        
     }
 
     get gridSize() {
@@ -48,7 +57,8 @@ class Robot extends EventEmitter{
     }
 
     commandController(command) {
-        
+        debugger
+        console.log("command controller %s %o", command, Commands)
     }
 
     placeRobot(command) {
