@@ -6,15 +6,16 @@
 const chalk = require('chalk');
 const  typewriter = require('node-typewriter');
 const EventEmitter = require('events').EventEmitter;
+var util = require('util');
 
 class Messaging extends EventEmitter{
     constructor() {
         super()
-        this.on("announce", this.announce)
-        this.on("info", this.info)
-        this.on("success", this.success)
-        this.on("error", this.error)
-        this.on("normal", this.normal)
+        this.addListener("announce", this.announce)
+        this.addListener("info", this.info)
+        this.addListener("success", this.success)
+        this.addListener("error", this.error)
+        this.addListener("normal", this.normal)
     }
 
     /**
