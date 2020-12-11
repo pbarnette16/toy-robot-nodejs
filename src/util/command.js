@@ -1,3 +1,5 @@
+"use strict";
+
 // This is the command structure for the robots commands
 // The command input will be checked against the commands listed
 // applying the validations if necessary
@@ -17,7 +19,7 @@ const commands = Object([
 {
     command: 'PLACE',
     help: "Place will put the robot onto the board. If the location and direction given to the place command are not valid the command will be ignored. The robot can be picked up and placed at any time.",
-    validation: ['isPlacementOnGrid','isFacingValid'],
+    validation: ['isOnGrid','isFacingValueValid'],
     action: 'storeLocation'
 },
 {
@@ -41,6 +43,12 @@ const commands = Object([
     command: 'REPORT',
     help: "`Report` will output the current location of the robot. The output will have the same structure as the place command, (X,Y,Direction)",
     action: 'returnCurrentLocation'
-}]);
+}, {
+    command: "HELP",
+    help: "Displays the commands to control the robot.",
+    action: 'displayHelp',
+    robotIgnore: true
+}
+]);
 
 module.exports = {commands}

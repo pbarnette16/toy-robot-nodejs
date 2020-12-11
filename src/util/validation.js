@@ -1,3 +1,5 @@
+"use strict";
+
 const command = require('./command.js')
 const move = require('./move.js')
 
