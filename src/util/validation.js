@@ -57,4 +57,17 @@ const Validation = {
     isHelpCommand: isHelpCommand
 }
 
-module.exports = Validation;
+// Checks for the help command
+function getDirection(req) {
+    let direction =  req.split(/PLACE\s(\d)[,](\d)[,](\w)/)
+}
+
+
+const Util = {
+    getDirection: getDirection,
+    getPoints: getPoints
+}
+
+
+
+module.exports = {Validation, Util};
