@@ -19,7 +19,7 @@ const commands = [
 {
     command: 'PLACE',
     help: "Place will put the robot onto the board. If the location and direction given to the place command are not valid the command will be ignored. The robot can be picked up and placed at any time.",
-    validation: ['isOnGrid','isFacingValueValid', 'isPositionValid'],
+    validation: ['isFacingValueValid', 'isPositionValid'],
     action: 'placeRobot'
 },
 {

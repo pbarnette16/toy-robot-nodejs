@@ -63,7 +63,7 @@ const readInput = () => {
             
       }
       catch(e) {
-          Messaging.emit("error", "Something screwed up.")
+          Messaging.emit("error", e.message)
       }  
 
 

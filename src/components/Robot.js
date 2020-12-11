@@ -57,13 +57,14 @@ class Robot extends EventEmitter{
     }
 
     commandController(robotInput) {
-        debugger
-        //console.log("command controller %s %o", robotInput, Commands)
+        console.log("command controller %s %o %o", robotInput, Commands, Validation.isValidCommand(robotInput))
         if(Validation.isValidCommand(robotInput)) {
             let currentAction = Commands.commands.find((obj) => {
-                return obj.command === req.split(' ')[0]
+                return obj.command === robotInput.split(' ')[0]
             })
             console.log("currentAction %o", currentAction)
+
+            this[currentAction.action](robotInput, currentAction.validation)
         }
         else {
             throw new Error("You didn't think you'd slip that command past me did you?")
@@ -71,7 +72,8 @@ class Robot extends EventEmitter{
 
     }
 
-    placeRobot(command) {
+    placeRobot(command, validation) {
+        this.runValidation(command, validation)
 
     }
 
@@ -80,6 +82,28 @@ class Robot extends EventEmitter{
     }
 
     setCoordinates() {
+
+    }
+
+    runValidation(command, validation) {
+        debugger
+        let valid = false;
+        let validArr = [];
+        try {
+            validation.forEach(item => {
+                console.log(item)
+                if(item === "isOnGrid") {
+                    validArr.push(this.robotOnGrid)
+                }
+
+                validArr.push(Validation[item](command, this.gridSize)); 
+        })
+        }
+        catch(e) {
+            console.log("validation threw an error: " + e.messaging)
+        }
+        
+        console.log(validArr)
 
     }
 

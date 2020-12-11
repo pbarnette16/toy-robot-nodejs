@@ -40,10 +40,20 @@ describe('Testing Values sent to the robot valid and invalid', () => {
             robot = new Robot.Robot({'x':5,'y':5});
         });
 
-        test('Robot: Place: Plaxe bad input', () => {
+        test('Robot: Place: Plaxe bad command', () => {
             expect( () => {
                 robot.emit("commandController", "Plaxe 1,1,N")
             }).toThrow("You didn't think you'd slip that command past me did you?")
+        });
+
+        test('Robot: Place: Place bad location [-1,-1]', () => {
+            expect(() =>{
+                robot.emit("commandController", "Place 1,1,N")
+            }).toEqual("Stu")
+        });
+
+        test('Robot: Place: Place bad Direction', () => {
+            expect("bob").toEqual("Stu")
         });
 
     })
