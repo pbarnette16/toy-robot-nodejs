@@ -72,18 +72,19 @@ All other commands given to the robot will result in the robot ignoring your com
 
 #### Development Directions
 
-This project is done as a command line interface in able to allow the developer to have a bit of interactivity. As a front-end developer it feels strange to me to not have some kind of interface. More about this will be discussed later.
+This project is done as a command line interface in able to allow the developer to have a bit of interactivity. As a front-end developer it feels strange to me to not have some kind of interface. 
+[Read about the development directions.](Design-Directions.md)
 
 
 ## Available Scripts
 
+To get started with the program
+`yarn install` This will install all of the necessary files to run the robot.
+Please make sure you have the most current version of node.
+
 In the project directory, you can run:
 ### `yarn app`
 This command will start the app.
-
-    "test-watch": "jest --watch",
-    "app": "node ./src/app.js",
-    "debug": "node --inspect-brk ./src/app.js "
 
 ### `yarn test`
 This command will start the tests.
