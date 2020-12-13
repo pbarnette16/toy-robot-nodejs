@@ -16,7 +16,7 @@ function isValidCommand(req) {
 // compares the complete string or just the first character of the listed directions
 // returns the object if it is found otherwise returns false
 function isFacingValueValid(req) {
-    console.log("req facing direction")
+    //console.log("req facing direction")
     let direction = Util.getDirection(req)
     return move.moveVector.find((obj) =>{
         return obj.facing === direction || obj.facing[0] === direction
@@ -25,23 +25,39 @@ function isFacingValueValid(req) {
 
 // is grid position valid
 function isPositionValid(req, gridDim) {
-    console.log(`valid position {$req} {$gridDim}`)
     let dir = Util.getPoints(req)
     
-    console.log("dir %o", dir)
     let newPoint = [parseInt(dir[0]), parseInt(dir[1])]
     if(newPoint[0] > -1 && newPoint[0] < gridDim[0]) {
         if(newPoint[1] > -1 && newPoint[1] < gridDim[1]) {
             return true;
         }
-         else
+         else {
             throw new Error("Seriously that's the Y cordinate you wanted.")
+         }
+            
     }
-        else
+    else {
             throw new Error("Well that X cordinate isn't going to work.")
+    }
+            
 
     return false;
 }
+
+// Can the robot move 
+function canMove(gridSize, currentPos) {
+    
+    let nextMove = move.moveVector.find((ele) => {
+        return ele.facing === currentPos.facing || ele.facing[0] === currentPos.facing
+    })
+
+    let newPosition = Util.getNewPoint(currentPos.coordinates, nextMove.move)
+
+    return (newPosition[0] > -1 && newPosition[1] > -1
+    && newPosition[0] < gridSize[0] && newPosition[1] < gridSize[1]) ? true : false;
+}
+
 
 // Checks for the help command
 function isHelpCommand(req) {
@@ -54,7 +70,8 @@ const Validation = {
     isValidCommand: isValidCommand,
     isFacingValueValid: isFacingValueValid,
     isPositionValid: isPositionValid,
-    isHelpCommand: isHelpCommand
+    isHelpCommand: isHelpCommand,
+    canMove: canMove
 }
 
 // Util function to return directions
@@ -79,9 +96,14 @@ function getPointsAndDirection(req) {
 }
 
 
+function getNewPoint(currentPoint, changePoint) {
+    return [currentPoint[0]+changePoint[0], currentPoint[1]+changePoint[1]];
+}
+
 const Util = {
     getDirection: getDirection,
-    getPoints: getPoints
+    getPoints: getPoints,
+    getNewPoint: getNewPoint
 }
 
 

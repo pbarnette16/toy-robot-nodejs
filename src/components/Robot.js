@@ -4,6 +4,7 @@ const Messaging = require("../util/messaging");
 const EventEmitter = require('events').EventEmitter;
 const {Validation, Util} = require("../util/validation");
 const Commands = require('../util/command')
+const Move = require('../util/move')
 
 // Robot
 // Created as a singleton as there is only one robot on the field at any one point
@@ -56,14 +57,14 @@ class Robot extends EventEmitter{
     }
 
     commandController(robotInput) {
-        debugger
-        console.log("command controller %s %o %o", robotInput, Commands, Validation.isValidCommand(robotInput))
+        
+        //console.log("command controller %s %o %o", robotInput, Commands, Validation.isValidCommand(robotInput))
        
         if(Validation.isValidCommand(robotInput)) {
             let currentAction = Commands.commands.find((obj) => {
                 return obj.command === robotInput.split(' ')[0]
             })
-            console.log("currentAction %o", currentAction)
+            //console.log("currentAction %o", currentAction)
 
             this[currentAction.action]({"command": robotInput, "currentAction": currentAction})
         }
@@ -80,13 +81,16 @@ class Robot extends EventEmitter{
             valid = this.runValidation(command, commandObj.currentAction.validation);
         }
         catch(e) {
-            Messaging.emit("error", e.message)
+            Messaging.emit("Place robot error:", e.message)
         }
 
             // iterate over the valid array to see if we find a false
             // if no false is found undefined will be returned
         if(valid.find(ele => ele === false) === undefined) {
-            this.addPlacement(Util.getPoints(command), Util.getDirection(command))
+            this.addPlacement(Util.getPoints(commandObj.command), Util.getDirection(commandObj.command))
+        }
+        else {
+            Messaging.emit("error", "Please don't put me in a bad place.")
         }
 
     }
@@ -94,9 +98,9 @@ class Robot extends EventEmitter{
     addPlacement(point, direction) {
         this.currentPos.coordinates = point;
         this.currentPos.facing = direction;
-        this.onGrid = true;
+        this.robotOnGrid = true;
         this.previousCommands.push(new Object(this.currentPos))
-        //Messaging.emit("success", `I am now at ${point.join(",")} and facing ${direction}`)
+        Messaging.emit("success", `I am now at [${point.join(",")}] and facing ${direction}`)
     }
 
     returnCurrentLocation() {
@@ -116,8 +120,8 @@ class Robot extends EventEmitter{
         }
 
         if(valid[0]) { // the validation came back true
-            console.log("rotate %o  valid %o", commandObj, valid);
-            let rotateDir = (command === "Left") ? -1 : 1;
+           
+            let rotateDir = (command === "LEFT") ? -1 : 1;
             
             let rotateVector = commandObj.currentAction.rotateVector;
             let index = rotateVector.findIndex((ele) => {
@@ -134,7 +138,7 @@ class Robot extends EventEmitter{
                 index = 0;
             }
             // reached the beginning of the directions vector, wrap around
-            else if(index + rotateDir < -1){
+            else if(index + rotateDir === -1){
                 index = rotateVector.length-1
             }
             else {
@@ -161,30 +165,55 @@ class Robot extends EventEmitter{
         catch(e) {
             Messaging.emit("error", "Move Error:" + e.message)
         }
+
+            // iterate over the valid array to see if we find a false
+            // if no false is found undefined will be returned
+        if(valid.find(ele => ele === false) === undefined) {
+            let nextMove = Move.moveVector.find((ele) => {
+                return ele.facing === this.currentPos.facing || ele.facing[0] === this.currentPos.facing
+            })
+        
+            let newPosition = Util.getNewPoint(this.currentPos.coordinates, nextMove.move)
+
+            this.addPlacement(newPosition, this.currentPos.facing)
+        }
+        else {
+            Messaging.emit("error", "Whay are you trying to get me killed?")
+        }
+
     }
 
     runValidation(command, validation) {
-        debugger
+    
         let valid = false;
         let validArr = [];
         try {
             validation.forEach(item => {
-                console.log(item)
+                
                 if(item === "isOnGrid") {
                     validArr.push(this.robotOnGrid)
+                }
+                else if(item === "canMove" && this.robotOnGrid) {
+                    validArr.push(Validation[item](this.gridSize, this.currentPos))
                 }
                 else {
                     validArr.push(Validation[item](command, this.gridSize));
                 }
+                /*
+                else {
+                    throw new Error("Im sorry Dave, Im not on the grid")
+                }
+                */
                  
         })
         }
         catch(e) {
-            console.log("validation threw an error: " + e.message)
-            Messaging.emit("error", e.message)
+            //console.log("validation threw an error: " + e.message)
+            Messaging.emit("error", "" + e.message)
+            validArr = [false]
         }
         
-        console.log(validArr)
+        //console.log(validArr)
         return validArr
 
     }
