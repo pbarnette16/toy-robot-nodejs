@@ -27,20 +27,20 @@ const commands = [
     help: "`Move` will move the robot one square in direction (NORTH, EAST, SOUTH, WEST) that it is currently facing.",
     validation: ['isOnGrid','canMove'],
     moveVector: move.moveVector,
-    action: 'moveObj'
+    action: 'move'
 },
 {
     command: 'LEFT',
     help: "`Left` will turn the robot 90 degrees to the left face a new direction. As an example, if the robot is facing North, giving the command of `Left` will turn the robot to the West. ",
     validation: ['isOnGrid'],
     rotateVector: rotateVector,
-    action: 'rotateLeft'
+    action: 'rotate'
 }, {
     command: 'RIGHT',
     help: "`Right` will turn the robot 90 degrees to the right to face a new direction. As an example, if the robot is facing North, giving the command of `Right` will turn the robot to the East.",
     validation: ['isOnGrid'],
     rotateVector: rotateVector,
-    action: 'rotateRight'
+    action: 'rotate'
 }, {
     command: 'REPORT',
     help: "`Report` will output the current location of the robot. The output will have the same structure as the place command, (X,Y,Direction)",

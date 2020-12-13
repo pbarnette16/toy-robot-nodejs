@@ -48,12 +48,20 @@ describe('Testing Values sent to the robot valid and invalid', () => {
 
         test('Robot: Place: Place bad location [-1,-1]', () => {
             expect(() =>{
-                robot.emit("commandController", "Place 1,1,N")
+                robot.emit("commandController", "Place -1,-1,N")
             }).toEqual("Stu")
         });
 
-        test('Robot: Place: Place bad Direction', () => {
-            expect("bob").toEqual("Stu")
+        test('Robot: Place: Place bad Direction Flark', () => {
+            expect(() => {
+                robot.emit("commandController", "Place 0,0,Flark")
+            }).toEqual("Stu")
+        });
+
+        test('Robot: Place: Place bad Direction J', () => {
+            expect(() => {
+                robot.emit("commandController", "Place 0,0,J")
+            }).toEqual("Stu")
         });
 
     })

@@ -8,14 +8,12 @@ const defaultConfig = config.development;
 const environment = process.env.NODE_ENV || 'development';
 
 /* Objects brought into the project */
-const validation = require('./util/validation');
+const {Validation} = require('./util/validation');
 let Grid = require('./components/Grid');
 let Messaging = require('./util/messaging');
 const Help = require('./util/Help');
 let {welcomeDescription} = require('./util/welcome');
 let Robot = require('./components/Robot')
-
-const Validation = require("./util/validation")
 
 
 /**

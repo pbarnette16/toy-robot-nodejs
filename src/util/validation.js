@@ -17,7 +17,7 @@ function isValidCommand(req) {
 // returns the object if it is found otherwise returns false
 function isFacingValueValid(req) {
     console.log("req facing direction")
-    let direction = req.split(/PLACE\s(\d)[,](\d)[,](\w)/).filter(ele => ele.length > 0)[2]
+    let direction = Util.getDirection(req)
     return move.moveVector.find((obj) =>{
         return obj.facing === direction || obj.facing[0] === direction
     } ) || false
@@ -26,7 +26,7 @@ function isFacingValueValid(req) {
 // is grid position valid
 function isPositionValid(req, gridDim) {
     console.log(`valid position {$req} {$gridDim}`)
-    let dir = req.trim().split(/PLACE\s(\d)[,](\d)[,](\w)/).filter(ele => ele.length > 0)
+    let dir = Util.getPoints(req)
     
     console.log("dir %o", dir)
     let newPoint = [parseInt(dir[0]), parseInt(dir[1])]
@@ -57,9 +57,25 @@ const Validation = {
     isHelpCommand: isHelpCommand
 }
 
-// Checks for the help command
+// Util function to return directions
 function getDirection(req) {
-    let direction =  req.split(/PLACE\s(\d)[,](\d)[,](\w)/)
+   return getPointsAndDirection(req)[2];
+}
+
+// Util function to return the points
+function getPoints(req) {
+    let point = new Array(2)
+    let dirArr = getPointsAndDirection(req);
+    point[0] = parseInt(dirArr[0])
+    point[1] = parseInt(dirArr[1])
+    return point;
+}
+
+// Util function that uses a regex to return the points and direction
+// filters out any null strings
+function getPointsAndDirection(req) {
+    return req.split(/PLACE\s(\d)[,](\d)[,](\w)/)
+                .filter(ele => ele.length > 0)
 }
 
 
