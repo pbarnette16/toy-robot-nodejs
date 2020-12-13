@@ -1,4 +1,4 @@
-#Design Direction
+# Design Direction
 
 ## The platform
 The node platform was used for this project. As I'm not great at 
