@@ -78,9 +78,19 @@ This project is done as a command line interface in able to allow the developer 
 ## Available Scripts
 
 In the project directory, you can run:
+### `yarn app`
+This command will start the app.
 
-### `yarn start`
+    "test-watch": "jest --watch",
+    "app": "node ./src/app.js",
+    "debug": "node --inspect-brk ./src/app.js "
 
 ### `yarn test`
+This command will start the tests.
 
-Launches the test runner in the interactive watch mode.
+### `yarn test-watch`
+This command will run the jest test in watch mode.
+
+### `yarn debug`
+This command will start the debugger so that you can run it in chrome to step through the code.
+
