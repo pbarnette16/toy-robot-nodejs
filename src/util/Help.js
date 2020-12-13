@@ -20,7 +20,7 @@ class Help  {
             return rObj;
             }
         )
-        console.log("commands %o",this.commands);
+        //console.log("commands %o",this.commands);
     }
 
     // display the commands from the robot

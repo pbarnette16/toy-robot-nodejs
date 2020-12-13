@@ -9,15 +9,21 @@ const EventEmitter = require('events').EventEmitter;
 var util = require('util');
 
 class Messaging extends EventEmitter{
+    
     constructor() {
         super()
+        // add all of the listeners to display the messages
         this.addListener("announce", this.announce)
         this.addListener("info", this.info)
         this.addListener("success", this.success)
         this.addListener("error", this.error)
         this.addListener("normal", this.normal)
+
     }
 
+    sendingMessage = false;
+    timerId = 0;
+    
     /**
     * To announce an action
     *
@@ -55,9 +61,17 @@ class Messaging extends EventEmitter{
      * @param {string} message - The message to be displayed in the console
      */
     error = async message => {
-        typewriter(chalk.white.bgRed(message)).then( () => {
-            console.log("\n")
-        })
+        if(!this.sendingMessage) {
+            this.sendingMessage = true;
+            typewriter(chalk.white.bgRed(message)).then( () => {
+                console.log("\n")
+                this.sendingMessage = false;
+            })
+        }
+        else {
+            setTimeout(this.error, 1000, message)
+        }
+        
     }
 
     /**

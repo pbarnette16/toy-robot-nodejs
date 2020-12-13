@@ -59,18 +59,19 @@ class Robot extends EventEmitter{
     commandController(robotInput) {
         
         //console.log("command controller %s %o %o", robotInput, Commands, Validation.isValidCommand(robotInput))
-       
         if(Validation.isValidCommand(robotInput)) {
             let currentAction = Commands.commands.find((obj) => {
                 return obj.command === robotInput.split(' ')[0]
             })
             //console.log("currentAction %o", currentAction)
 
-            this[currentAction.action]({"command": robotInput, "currentAction": currentAction})
+            return this[currentAction.action]({"command": robotInput, "currentAction": currentAction})
         }
+        /*
         else {
             throw new Error("You didn't think you'd slip that command past me did you?")
         }
+        */
 
     }
 
@@ -81,7 +82,7 @@ class Robot extends EventEmitter{
             valid = this.runValidation(command, commandObj.currentAction.validation);
         }
         catch(e) {
-            Messaging.emit("Place robot error:", e.message)
+            Messaging.emit("error", "Place robot error:" +e.message)
         }
 
             // iterate over the valid array to see if we find a false
@@ -104,8 +105,14 @@ class Robot extends EventEmitter{
     }
 
     returnCurrentLocation() {
-        const outputStr = this.currentPos.coordinates.join(",") + "," + this.currentPos.facing
-        Messaging.emit("success", outputStr)
+        if(this.robotOnGrid) {
+            const outputStr = this.currentPos.coordinates.join(",") + "," + this.currentPos.facing
+            Messaging.emit("success", outputStr)
+        }
+        else {
+            Messaging.emit("error", "Nothing to say im not on the board.")
+        }
+        
     }
 
 
@@ -189,7 +196,6 @@ class Robot extends EventEmitter{
         let validArr = [];
         try {
             validation.forEach(item => {
-                
                 if(item === "isOnGrid") {
                     validArr.push(this.robotOnGrid)
                 }
@@ -199,17 +205,13 @@ class Robot extends EventEmitter{
                 else {
                     validArr.push(Validation[item](command, this.gridSize));
                 }
-                /*
-                else {
-                    throw new Error("Im sorry Dave, Im not on the grid")
-                }
-                */
+
                  
         })
         }
         catch(e) {
             //console.log("validation threw an error: " + e.message)
-            Messaging.emit("error", "" + e.message)
+            Messaging.emit("error", "Validation error: " + e.message)
             validArr = [false]
         }
         

@@ -91,7 +91,7 @@ function getPoints(req) {
 // Util function that uses a regex to return the points and direction
 // filters out any null strings
 function getPointsAndDirection(req) {
-    return req.split(/PLACE\s(\d)[,](\d)[,](\w)/)
+    return req.split(/PLACE\s([-]?\d)[,]([-]?\d)[,](\w)/ig)
                 .filter(ele => ele.length > 0)
 }
 

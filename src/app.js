@@ -32,7 +32,7 @@ const readInput = () => {
     robot = new Robot.Robot(grid.dimensions())
   }
   catch(e) {
-    Messaging.emit("error", e.message);
+    Messaging.emit("error", "Robot build error: "+ e.message);
     return;
   }
   
@@ -56,12 +56,12 @@ const readInput = () => {
               
           }
           else {
-            Messaging.emit("error", "Did you really think that command would work on me?")
+            Messaging.emit("error", "Command error: Did you really think that command would work on me?")
           }
             
       }
       catch(e) {
-          Messaging.emit("error", e.message)
+          Messaging.emit("error", "General error: "+ e.message)
       }  
 
 
@@ -77,15 +77,6 @@ const readInput = () => {
 const init = () => {
   
     welcomeDescription()
-
-    //console.log(Grid.sizeStr())
-    //console.log(Grid.dimensions())
-
-      
-    // create a new grid based on the configuration
-    //console.log(new Grid.Grid(defaultConfig.grid[0], defaultConfig.grid[1]))
-
-    //console.log(defaultConfig)
     readInput();
 };
 
