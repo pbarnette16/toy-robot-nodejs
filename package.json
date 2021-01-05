@@ -9,6 +9,7 @@
   "scripts": {
     "test": "jest",
     "test-watch": "jest --watch",
+    "test-coverage": "jest --coverage",
     "app": "node ./src/app.js",
     "debug": "node --inspect-brk ./src/app.js "
   },

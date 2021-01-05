@@ -19,7 +19,9 @@ class Robot extends EventEmitter{
 
     previousCommands = []
 
-    constructor(dimensions) {
+    announce = false
+
+    constructor(dimensions, announce) {
         super()
         this.gridSize = dimensions
         Messaging.emit("normal", "Your robot has been built\n");
@@ -65,13 +67,18 @@ class Robot extends EventEmitter{
             })
             //console.log("currentAction %o", currentAction)
 
-            return this[currentAction.action]({"command": robotInput, "currentAction": currentAction})
+            let outputObj =  this[currentAction.action]({"command": robotInput, "currentAction": currentAction})
+
+            //console.log(outputObj)
+
+            if(this.announce) {
+                Messaging.emit(outputObj.msgType, outputObj.msg)
+            }
+            else {
+                console.log("controller error")
+                console.log(outputObj)
+            }
         }
-        /*
-        else {
-            throw new Error("You didn't think you'd slip that command past me did you?")
-        }
-        */
 
     }
 
@@ -84,14 +91,16 @@ class Robot extends EventEmitter{
         catch(e) {
             Messaging.emit("error", "Place robot error:" +e.message)
         }
+        console.log("place")
+        console.log(valid)
 
             // iterate over the valid array to see if we find a false
-            // if no false is found undefined will be returned
-        if(valid.find(ele => ele === false) === undefined) {
-            this.addPlacement(Util.getPoints(commandObj.command), Util.getDirection(commandObj.command))
+            
+        if(valid.msgType === "success") {
+            return this.addPlacement(Util.getPoints(commandObj.command), Util.getDirection(commandObj.command))
         }
         else {
-            Messaging.emit("error", "Please don't put me in a bad place.")
+            return [valid, { msgType: "error", msg: "Please don't put me in a bad place."}]
         }
 
     }
@@ -101,16 +110,16 @@ class Robot extends EventEmitter{
         this.currentPos.facing = direction;
         this.robotOnGrid = true;
         this.previousCommands.push(new Object(this.currentPos))
-        Messaging.emit("success", `I am now at [${point.join(",")}] and facing ${direction}`)
+        return {msgType: "success", msg: `I am now at [${point.join(",")}] and facing ${direction}` } 
     }
 
     returnCurrentLocation() {
         if(this.robotOnGrid) {
             const outputStr = this.currentPos.coordinates.join(",") + "," + this.currentPos.facing
-            Messaging.emit("success", outputStr)
+            return {msgType: "success", msg: outputStr};
         }
         else {
-            Messaging.emit("error", "Nothing to say im not on the board.")
+            return {msgType: "error", msg:"Nothing to say im not on the board." };
         }
         
     }
@@ -137,7 +146,7 @@ class Robot extends EventEmitter{
             // if the index is -1 it couldnt find the current direction
             // this is an error
             if(index === -1) {
-                Messaging.emit("error", "Rotate Error: How did that direction slip through?")
+                return {msgType: "error", msg: "Rotate Error: How did that direction slip through?"};
             }
 
             // reached the end of the directions vector, wrap around
@@ -153,12 +162,12 @@ class Robot extends EventEmitter{
                 index += rotateDir 
             }
             // update the placement with the new facing direction
-            this.addPlacement(this.currentPos.coordinates, rotateVector[index].facing)
+            return this.addPlacement(this.currentPos.coordinates, rotateVector[index].facing)
 
         }
         else {
             // The robot is not on the grid
-            Messaging.emit("error", "Rotate Error: Naughty naughty, I'm not on the grid!")
+            return {msgType: "error", msg :"Rotate Error: Naughty naughty, I'm not on the grid!"}
         }
 
     }
@@ -170,7 +179,7 @@ class Robot extends EventEmitter{
             valid = this.runValidation(command, commandObj.currentAction.validation);
         }
         catch(e) {
-            Messaging.emit("error", "Move Error:" + e.message)
+            return {msgType: "error", msg: "Move Error:" + e.message};
         }
 
             // iterate over the valid array to see if we find a false
@@ -182,10 +191,10 @@ class Robot extends EventEmitter{
         
             let newPosition = Util.getNewPoint(this.currentPos.coordinates, nextMove.move)
 
-            this.addPlacement(newPosition, this.currentPos.facing)
+            return this.addPlacement(newPosition, this.currentPos.facing)
         }
         else {
-            Messaging.emit("error", "Whay are you trying to get me killed?")
+            return {msgType: "error", msg: "Whay are you trying to get me killed?"};
         }
 
     }
@@ -211,8 +220,8 @@ class Robot extends EventEmitter{
         }
         catch(e) {
             //console.log("validation threw an error: " + e.message)
-            Messaging.emit("error", "Validation error: " + e.message)
-            validArr = [false]
+            return {msgType: "error", msg: "Validation error: " + e.message}
+            
         }
         
         //console.log(validArr)

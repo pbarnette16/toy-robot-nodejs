@@ -47,6 +47,7 @@ const readInput = () => {
           if(Validation.isValidCommand(command)){
             if(!Validation.isHelpCommand(command)) {
                 // sends the command to the robot to process
+                console.log("call command controller " + command)
                 robot.emit("commandController", command)
             }
             else {

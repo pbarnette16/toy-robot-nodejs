@@ -1,4 +1,5 @@
 const Robot = require('./Robot');
+const Messaging = require('../util/messaging');
 
 describe('Creation of a Robot', () => {
     beforeEach(() => {
@@ -35,22 +36,41 @@ describe('Testing Values sent to the robot PLACE command valid and invalid', () 
         let robot = null
      });
 
+
+
     describe('Robot: Testing of the PLACE command', () => {
         beforeEach(() => {
             robot = new Robot.Robot({'x':5,'y':5});
+            handler = jest.fn();
+            handlerMsg = jest.fn();
         });
 
         test('Robot: Place: Plaxe bad command', () => {
-            expect( () => {
-                robot.emit("commandController", "Plaxe 1,1,N")
-            }).toThrow("You didn't think you'd slip that command past me did you?")
+            
+            robot.on("commandController", handler)
+            robot.emit("commandController", "Plaxe 1,1,N")
+
+            Messaging.on("error", handlerMsg)
+
+            expect(handler).toBeCalledTimes(1)
+            expect(handler).toBeCalledWith("Plaxe 1,1,N")
+
+           // expect(handlerMsg).toBeCalledWith("Command error: Did you really think that command would work on me?")
+
+           //console.log(handler.mockReturnedValue);
+            //expect(handler.value).toBe('return value');
         });
         
         test('Robot: Place: Place bad location [-1,-1]', () => {
-            expect(()=> {
-                robot.emit("commandController", "Place -1,-1,N")
-            })
-            .toThrow("You didn't think you'd slip that command past me did you?");
+            robot.on("commandController", handler)
+            robot.emit("commandController", "Place -1,-1,N")
+
+            Messaging.on("error", handlerMsg)
+
+            expect(handler).toBeCalledTimes(1)
+            expect(handler).toBeCalledWith("Place -1,-1,N")
+
+            expect(handlerMsg).stringContaining("You didn't think you'd slip that command past me did you?")
         });
 
         test('Robot: Place: Place bad location [0,-1]', ()=>{
