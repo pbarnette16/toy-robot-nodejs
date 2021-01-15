@@ -1,68 +1,117 @@
 const Robot = require('./Robot');
 
-describe('Creation of a Robot', () => {
+describe('Testing of the example input/output', () => {
     beforeEach(() => {
-        robot = new Robot.Robot({'x':5,'y':5}, false);
-        handler = jest.fn();
+        // the false command on the robot constructor allows for the return of the message object to easily test
+        robot = new Robot({'x':5,'y':5}, false);
     });
 
      test('Example Input 1', () => {
 
-        //robot.on("commandController", handler)
 
-        robot.emit("commandController", "Place 0,0,N");
-
-        //expect(handler).toBeCalledTimes(1)
-        //expect(handler).toBeCalledWith("Place 0,0,N")
-
-        robot.emit("commandController", "Move");
-
-        //expect(handler).toBeCalledTimes(2)
-        //expect(handler).toBeCalledWith("Move")
-
-        robot.emit("commandController", "Report");
-
-        //expect(handler).toBeCalledTimes(3)
-        //expect(handler).toBeCalledWith("Report")
-        
-        
-        robot.emit("commandController", "Report").then((data) => {
-            console.log(data)
+        robot.commandController("Place 0,0,N")
+        .then(data => {
+            return expect(data).objectContaining({ msgType: 'success', msg: 'I am now at [0,0] and facing N'});
         })
-        
-        //robot.emit("commandController", "Report").then((output) => {
-        //    console.log(output)
-        //})
-        //console.log(handler.mock);
-        /*
-        expect(() =>{
-            console.log(robot.emit("commandController", "Report"));
-        }).toContain("0,1,N"); 
-*/
+        .catch(e => {
+
+        })
+
+        robot.commandController("Move")
+        .then(data => {
+            return expect(data).objectContaining({ msgType: 'success', msg: 'I am now at [0,1] and facing N' });
+        })
+        .catch(e => {
+
+        })
+
+        robot.commandController("Report")
+        .then(data => {
+            return expect(data).objectContaining({ msgType: 'success', msg: '0,1,N' });
+        })
+        .catch(e => {
+
+        })
 
     });
-/*
+
     test('Example Input 2', () => {
-        expect(() =>{
-            robot = new Robot.Robot({x:5,y:5}, false)
-            robot.emit("commandController", "Place 0,0,N");
-            robot.emit("commandController", "Left");
-            robot.emit("commandController", "Report");
-        }).stringContaining("0,0,WEST");
+        robot.commandController("Place 0,0,N")
+        .then(data => {
+            return expect(data).objectContaining({ msgType: 'success', msg: 'I am now at [0,0] and facing N'});
+        })
+        .catch(e => {
+
+        })
+
+        robot.commandController("Left")
+        .then(data => {
+            return expect(data).objectContaining({ msgType: 'success', msg: 'I am now at [0,0] and facing West'});
+        })
+        .catch(e => {
+
+        })
+
+        robot.commandController("Report")
+        .then(data => {
+            return expect(data).objectContaining({ msgType: 'success', msg: '0,0,WEST'});
+        })
+        .catch(e => {
+
+        })
         
     });
 
     test('Example Input 3', () => {
-        expect(() =>{
-            robot = new Robot.Robot({x:5,y:5}, false)
-            robot.emit("commandController", "Place 1,2,N");
-            robot.emit("commandController", "Move");
-            robot.emit("commandController", "Move");
-            robot.emit("commandController", "Left");
-            robot.emit("commandController", "Move");
-            robot.emit("commandController", "Report");
-        }).stringContaining("3,3,NORTH");
+
+        robot.commandController("Place 1,2,E")
+        .then(data => {
+            return expect(data).objectContaining({ msgType: 'success', msg: 'I am now at [1,2] and facing E'});
+        })
+        .catch(e => {
+
+        })
+
+        robot.commandController("Move")
+        .then(data => {
+            return expect(data).objectContaining({ msgType: 'success', msg: 'I am now at [2,2] and facing E'});
+        })
+        .catch(e => {
+
+        })
+
+        robot.commandController("Move")
+        .then(data => {
+            return expect(data).objectContaining({ msgType: 'success', msg: 'I am now at [3,2] and facing E'});
+        })
+        .catch(e => {
+
+        })
+
+        robot.commandController("Left") // look into why the whole word is spit out
+        .then(data => {
+            return expect(data).objectContaining({ msgType: 'success', msg: 'I am now at [3,2] and facing NORTH'});
+        })
+        .catch(e => {
+
+        })
+
+        robot.commandController("move") // look into why the whole word is spit out
+        .then(data => {
+            return expect(data).objectContaining({ msgType: 'success', msg: 'I am now at [3,3] and facing NORTH'});
+        })
+        .catch(e => {
+
+        })
+
+        robot.commandController("report")
+        .then(data => {
+            return expect(data).objectContaining({ msgType: 'success', msg: '3,3,NORTH'});
+        })
+        .catch(e => {
+
+        })
         
     });
-*/
+
 })

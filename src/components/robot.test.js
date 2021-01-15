@@ -7,24 +7,24 @@ describe('Creation of a Robot', () => {
 
     test('checking to see if no grid is sent to the robot constructor', () => {
         expect(() => {
-            robot = new Robot.Robot()}
+            robot = new Robot()}
             ).toThrow("You have not set a valid grid. Try again");
     });
 
     test('checking to see if a negative grid is sent to the robot constructor', () => {
         expect(() => {
-            robot = new Robot.Robot({'x':-1,'y':-10}, false)}
+            robot = new Robot({'x':-1,'y':-10}, false)}
             ).toThrow("You have not set a valid grid. Try again");
     });
 
     test('checking to see if a [0,0] grid is sent to the robot constructor', () => {
         expect(() => {
-            robot = new Robot.Robot({'x':0,'y':0}, false)}
+            robot = new Robot({'x':0,'y':0}, false)}
             ).toThrow("You have not set a valid grid. Try again");
     });
 
     test('checking to see if a [5,5] grid is sent to the robot constructor', () => {
-        robot = new Robot.Robot({'x':5,'y':5}, false)
+        robot = new Robot({'x':5,'y':5}, false)
         expect(robot).toBeInstanceOf(Robot.Robot);
     });
     
@@ -39,7 +39,7 @@ describe('Testing Values sent to the robot PLACE command valid and invalid', () 
 
     describe('Robot: Testing of the PLACE command', () => {
         beforeEach(() => {
-            robot = new Robot.Robot({'x':5,'y':5}, false);
+            robot = new Robot({'x':5,'y':5}, false);
             handler = jest.fn();
             handlerMsg = jest.fn();
         });
@@ -66,11 +66,6 @@ describe('Testing Values sent to the robot PLACE command valid and invalid', () 
             expect(handler).toBeCalledWith("Place -1,-1,N")
             
             console.log(handler.expect);
-            /*
-            expect(()=> {
-                robot.emit("commandController", "Place 0,-1,N")
-            }).toThrow("You didn't think you'd slip that command past me did you?")
-            */
             
         });
 
@@ -108,7 +103,7 @@ describe('Testing Values sent to the robot MOVE command valid and invalid', () =
 
     describe('Robot: Testing of the move command which is on the board.', () => {
         beforeEach(() => {
-            robot = new Robot.Robot({'x':5,'y':5});
+            robot = new Robot({'x':5,'y':5});
             robot.emit("commandController", "Place 0,0,N")
         });
 
@@ -123,7 +118,7 @@ describe('Testing Values sent to the robot MOVE command valid and invalid', () =
 
     describe('Robot: Testing of the move command which is NOT on the board.', () => {
         beforeEach(() => {
-            robot = new Robot.Robot({'x':5,'y':5});
+            robot = new Robot({'x':5,'y':5});
             
         });
 
@@ -138,7 +133,7 @@ describe('Testing Values sent to the robot MOVE command valid and invalid', () =
 
     describe('Robot: Testing of the MOVE command in the board corner.', () => {
         beforeEach(() => {
-            robot = new Robot.Robot({'x':5,'y':5});
+            robot = new Robot({'x':5,'y':5});
             robot.emit("commandController", "Place 0,0,W")
         });
 
@@ -160,7 +155,7 @@ describe('Testing Values sent to the robot LEFT command valid and invalid', () =
 
     describe('Robot: Testing of the LEFT command which is on the board.', () => {
         beforeEach(() => {
-            robot = new Robot.Robot({'x':5,'y':5});
+            robot = new Robot({'x':5,'y':5});
             robot.emit("commandController", "Place 0,0,N")
         });
 
@@ -175,7 +170,7 @@ describe('Testing Values sent to the robot LEFT command valid and invalid', () =
 
     describe('Robot: Testing of the Left command which is NOT on the board.', () => {
         beforeEach(() => {
-            robot = new Robot.Robot({'x':5,'y':5});
+            robot = new Robot({'x':5,'y':5});
             
         });
 
@@ -197,7 +192,7 @@ describe('Testing Values sent to the robot LEFT command valid and invalid', () =
 
     describe('Robot: Testing of the LEFT command which is on the board.', () => {
         beforeEach(() => {
-            robot = new Robot.Robot({'x':5,'y':5});
+            robot = new Robot({'x':5,'y':5});
             robot.emit("commandController", "Place 0,0,N")
         });
 
@@ -212,7 +207,7 @@ describe('Testing Values sent to the robot LEFT command valid and invalid', () =
 
     describe('Robot: Testing of the Left command which is NOT on the board.', () => {
         beforeEach(() => {
-            robot = new Robot.Robot({'x':5,'y':5});
+            robot = new Robot({'x':5,'y':5});
             
         });
 
@@ -290,7 +285,7 @@ describe('Testing Values sent to the robot Report command valid and invalid', ()
 
     describe('Robot: Testing of the Right command which is on the board.', () => {
         beforeEach(() => {
-            robot = new Robot.Robot({'x':5,'y':5});
+            robot = new Robot({'x':5,'y':5});
             robot.emit("commandController", "Place 0,0,N")
         });
 
@@ -304,7 +299,7 @@ describe('Testing Values sent to the robot Report command valid and invalid', ()
 
     describe('Robot: Testing of the Report command which is NOT on the board.', () => {
         beforeEach(() => {
-            robot = new Robot.Robot({'x':5,'y':5});
+            robot = new Robot({'x':5,'y':5});
         });
 
         test('Robot: Report', () => {
