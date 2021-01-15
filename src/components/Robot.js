@@ -33,7 +33,7 @@ class Robot{
         //this.addListener("commandController", this.commandController);
         //util.promisify(this.emit)
         //this.on('finish instruction', this.finishInstruction)
-        this.commandController = Promise.promisifyAll(this.commandController);
+        //this.commandController = Promise.promisifyAll(this.commandController);
 
         this.announce = announce;
         this.output = null
@@ -85,20 +85,14 @@ class Robot{
             let currentAction = Commands.commands.find((obj) => {
                 return obj.command === robotInputLocal.split(' ')[0]
             })
-            //console.log("currentAction %o", currentAction)
 
             let outputObj =  this[currentAction.action]({"command": robotInputLocal, "currentAction": currentAction})
-
-            //console.log("output log" + outputObj)
 
             if(this.announce) {
                 Messaging.emit(outputObj.msgType, outputObj.msg)
             }
             else {
-                //console.log("setting output: "+ outputObj)
                 this.outputObj = outputObj;
-                //this.emit('finish instruction')
-                
                 return Promise.resolve(this.outputObj);
                 
             }
@@ -108,7 +102,7 @@ class Robot{
                 Messaging.emit("error", `Oh you think you can sneak the ${robotInputLocal} command past me`)
             }
             else {
-                return Promise.reject({msgType: "error", msg: `Oh you think you can sneak the ${robotInputLocal} command past me`})
+                return Promise.reject({msgType: "error", msg: `Oh you think you can sneak the "${robotInputLocal}" command past me`, errorType: "command"})
             }
         }
 
