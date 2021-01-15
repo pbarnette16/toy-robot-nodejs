@@ -1,5 +1,4 @@
 const Robot = require('./Robot');
-const Messaging = require('../util/messaging');
 
 describe('Creation of a Robot', () => {
     beforeEach(() => {
@@ -14,18 +13,18 @@ describe('Creation of a Robot', () => {
 
     test('checking to see if a negative grid is sent to the robot constructor', () => {
         expect(() => {
-            robot = new Robot.Robot({'x':-1,'y':-10})}
+            robot = new Robot.Robot({'x':-1,'y':-10}, false)}
             ).toThrow("You have not set a valid grid. Try again");
     });
 
     test('checking to see if a [0,0] grid is sent to the robot constructor', () => {
         expect(() => {
-            robot = new Robot.Robot({'x':0,'y':0})}
+            robot = new Robot.Robot({'x':0,'y':0}, false)}
             ).toThrow("You have not set a valid grid. Try again");
     });
 
     test('checking to see if a [5,5] grid is sent to the robot constructor', () => {
-        robot = new Robot.Robot({'x':5,'y':5})
+        robot = new Robot.Robot({'x':5,'y':5}, false)
         expect(robot).toBeInstanceOf(Robot.Robot);
     });
     
@@ -40,7 +39,7 @@ describe('Testing Values sent to the robot PLACE command valid and invalid', () 
 
     describe('Robot: Testing of the PLACE command', () => {
         beforeEach(() => {
-            robot = new Robot.Robot({'x':5,'y':5});
+            robot = new Robot.Robot({'x':5,'y':5}, false);
             handler = jest.fn();
             handlerMsg = jest.fn();
         });
@@ -50,14 +49,12 @@ describe('Testing Values sent to the robot PLACE command valid and invalid', () 
             robot.on("commandController", handler)
             robot.emit("commandController", "Plaxe 1,1,N")
 
-            Messaging.on("error", handlerMsg)
-
             expect(handler).toBeCalledTimes(1)
             expect(handler).toBeCalledWith("Plaxe 1,1,N")
 
            // expect(handlerMsg).toBeCalledWith("Command error: Did you really think that command would work on me?")
 
-           //console.log(handler.mockReturnedValue);
+           
             //expect(handler.value).toBe('return value');
         });
         
@@ -65,12 +62,16 @@ describe('Testing Values sent to the robot PLACE command valid and invalid', () 
             robot.on("commandController", handler)
             robot.emit("commandController", "Place -1,-1,N")
 
-            Messaging.on("error", handlerMsg)
-
             expect(handler).toBeCalledTimes(1)
             expect(handler).toBeCalledWith("Place -1,-1,N")
-
-            expect(handlerMsg).stringContaining("You didn't think you'd slip that command past me did you?")
+            
+            console.log(handler.expect);
+            /*
+            expect(()=> {
+                robot.emit("commandController", "Place 0,-1,N")
+            }).toThrow("You didn't think you'd slip that command past me did you?")
+            */
+            
         });
 
         test('Robot: Place: Place bad location [0,-1]', ()=>{

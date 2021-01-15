@@ -1,10 +1,12 @@
 "use strict";
 
 const Messaging = require("../util/messaging");
-const EventEmitter = require('events').EventEmitter;
 const {Validation, Util} = require("../util/validation");
 const Commands = require('../util/command')
 const Move = require('../util/move')
+
+let EventEmitter = require("events").EventEmitter;
+let Promise = require("bluebird");
 
 // Robot
 // Created as a singleton as there is only one robot on the field at any one point
@@ -19,13 +21,25 @@ class Robot extends EventEmitter{
 
     previousCommands = []
 
-    announce = false
+    announce = true
 
-    constructor(dimensions, announce) {
+    outputObj = null
+
+    constructor(dimensions, announce = true) {
         super()
-        this.gridSize = dimensions
-        Messaging.emit("normal", "Your robot has been built\n");
-        this.addListener("commandController", this.commandController)
+        this.gridSize = dimensions;   
+        
+        this.addListener("commandController", this.commandController);
+        //util.promisify(this.emit)
+        //this.on('finish instruction', this.finishInstruction)
+        
+
+        this.announce = announce;
+        this.output = null
+        if(this.announce) {
+            Messaging.emit("normal", "Your robot has been built\n");
+        }
+        
     }
 
     set gridSize(dimensions) {
@@ -58,25 +72,40 @@ class Robot extends EventEmitter{
         return this.onGrid;
     }
 
-    commandController(robotInput) {
-        
+    finishInstruction() {
+        return this.outputObj;
+    }
+
+    commandController(robotInput){
+        this.outputObj = null
+        let robotInputLocal = robotInput
         //console.log("command controller %s %o %o", robotInput, Commands, Validation.isValidCommand(robotInput))
-        if(Validation.isValidCommand(robotInput)) {
+        if(Validation.isValidCommand(robotInputLocal)) {
             let currentAction = Commands.commands.find((obj) => {
-                return obj.command === robotInput.split(' ')[0]
+                return obj.command === robotInputLocal.split(' ')[0]
             })
             //console.log("currentAction %o", currentAction)
 
-            let outputObj =  this[currentAction.action]({"command": robotInput, "currentAction": currentAction})
+            let outputObj =  this[currentAction.action]({"command": robotInputLocal, "currentAction": currentAction})
 
-            //console.log(outputObj)
+            //console.log("output log" + outputObj)
 
             if(this.announce) {
                 Messaging.emit(outputObj.msgType, outputObj.msg)
             }
             else {
-                console.log("controller error")
-                console.log(outputObj)
+                //console.log("setting output: "+ outputObj)
+                this.outputObj = outputObj;
+                //this.emit('finish instruction')
+                return {data: this.outputObj};
+            }
+        }
+        else {
+            if(this.announce) {
+                Messaging.emit("error", `Oh you think you can sneak the ${robotInputLocal} command past me`)
+            }
+            else {
+                return {msgType: "error", msg: `Oh you think you can sneak the ${robotInputLocal} command past me`}
             }
         }
 
@@ -89,14 +118,12 @@ class Robot extends EventEmitter{
             valid = this.runValidation(command, commandObj.currentAction.validation);
         }
         catch(e) {
-            Messaging.emit("error", "Place robot error:" +e.message)
+            valid = {msgType: "error", msg: "Place robot error:" +e.message}
         }
-        console.log("place")
-        console.log(valid)
-
             // iterate over the valid array to see if we find a false
             
-        if(valid.msgType === "success") {
+
+        if(!valid.hasOwnProperty("msgType") && valid.find(ele => ele === false) === undefined) {
             return this.addPlacement(Util.getPoints(commandObj.command), Util.getDirection(commandObj.command))
         }
         else {
@@ -135,7 +162,7 @@ class Robot extends EventEmitter{
             Messaging.emit("error", "Rotate Validation error:" +e.message)
         }
 
-        if(valid[0]) { // the validation came back true
+        if(!valid.hasOwnProperty("msgType") && valid[0]) { // the validation came back true
            
             let rotateDir = (command === "LEFT") ? -1 : 1;
             
@@ -184,7 +211,7 @@ class Robot extends EventEmitter{
 
             // iterate over the valid array to see if we find a false
             // if no false is found undefined will be returned
-        if(valid.find(ele => ele === false) === undefined) {
+        if(!valid.hasOwnProperty("msgType") && valid.find(ele => ele === false) === undefined) {
             let nextMove = Move.moveVector.find((ele) => {
                 return ele.facing === this.currentPos.facing || ele.facing[0] === this.currentPos.facing
             })
@@ -231,4 +258,4 @@ class Robot extends EventEmitter{
 
 }
 
-module.exports.Robot = Robot
+module.exports = Robot;

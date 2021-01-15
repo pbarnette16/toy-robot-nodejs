@@ -22,14 +22,14 @@ let Robot = require('./components/Robot')
 const readInput = () => {
   let stdin = process.openStdin();
   // create grid
-  const grid = new Grid.Grid(defaultConfig.grid[0], defaultConfig.grid[1]);
+  const grid = new Grid(defaultConfig.grid[0], defaultConfig.grid[1]);
   let robot = null;
 
   // pubsub call for letting the user know about the grid
   Messaging.emit("normal",grid.sizeStr());
 
   try {
-    robot = new Robot.Robot(grid.dimensions())
+    robot = new Robot(grid.dimensions(), defaultConfig.announce)
   }
   catch(e) {
     Messaging.emit("error", "Robot build error: "+ e.message);
@@ -44,21 +44,27 @@ const readInput = () => {
       .toUpperCase();
 
       try {
-          if(Validation.isValidCommand(command)){
+          //if(Validation.isValidCommand(command)){
             if(!Validation.isHelpCommand(command)) {
                 // sends the command to the robot to process
-                console.log("call command controller " + command)
-                robot.emit("commandController", command)
+                robot.emitAsync("commandController", command)
+                .then(data => {
+                  console.log("I got to the then!")
+                  console.log(item)
+                })
+                .fail(e => {
+                  console.log('the command threw an error: ' + e)
+                })
             }
             else {
                 // Calls program help
                 Help.displayHelp()
             }
               
-          }
-          else {
-            Messaging.emit("error", "Command error: Did you really think that command would work on me?")
-          }
+          //}
+          //else {
+          //  Messaging.emit("error", "Command error: Did you really think that command would work on me?")
+          //}
             
       }
       catch(e) {

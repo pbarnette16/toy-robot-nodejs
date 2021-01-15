@@ -4,7 +4,7 @@
   "description": "A command-line application of the toy robot challenge, done in NodeJS",
   "main": "app.js",
   "bin": {
-    "toy-robot": "./src/app.js"
+    "toy-robot": "src/app.js"
   },
   "scripts": {
     "test": "jest",
@@ -16,6 +16,7 @@
   "author": "Paul Barnette",
   "license": "ISC",
   "dependencies": {
+    "bluebird": "^3.7.2",
     "chalk": "^4.1.0",
     "commander": "^6.2.0",
     "node-typewriter": "^0.0.2"
