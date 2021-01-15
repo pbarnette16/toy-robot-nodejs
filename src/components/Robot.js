@@ -7,10 +7,11 @@ const Move = require('../util/move')
 
 let EventEmitter = require("events").EventEmitter;
 let Promise = require("bluebird");
+const { reject } = require("bluebird");
 
 // Robot
 // Created as a singleton as there is only one robot on the field at any one point
-class Robot extends EventEmitter{
+class Robot{
     currentPos = {
         facing: "Dolor",
         coordinates: [-1, -1]
@@ -26,13 +27,13 @@ class Robot extends EventEmitter{
     outputObj = null
 
     constructor(dimensions, announce = true) {
-        super()
+        //super()
         this.gridSize = dimensions;   
         
-        this.addListener("commandController", this.commandController);
+        //this.addListener("commandController", this.commandController);
         //util.promisify(this.emit)
         //this.on('finish instruction', this.finishInstruction)
-        
+        this.commandController = Promise.promisifyAll(this.commandController);
 
         this.announce = announce;
         this.output = null
@@ -97,7 +98,9 @@ class Robot extends EventEmitter{
                 //console.log("setting output: "+ outputObj)
                 this.outputObj = outputObj;
                 //this.emit('finish instruction')
-                return {data: this.outputObj};
+                
+                return Promise.resolve(this.outputObj);
+                
             }
         }
         else {
@@ -105,7 +108,7 @@ class Robot extends EventEmitter{
                 Messaging.emit("error", `Oh you think you can sneak the ${robotInputLocal} command past me`)
             }
             else {
-                return {msgType: "error", msg: `Oh you think you can sneak the ${robotInputLocal} command past me`}
+                return Promise.reject({msgType: "error", msg: `Oh you think you can sneak the ${robotInputLocal} command past me`})
             }
         }
 
@@ -258,4 +261,4 @@ class Robot extends EventEmitter{
 
 }
 
-module.exports = Robot;
+module.exports = Promise.promisifyAll(Robot);
