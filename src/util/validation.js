@@ -57,6 +57,9 @@ function canMove(gridSize, currentPos) {
         return ele.facing === currentPos.facing || ele.facing[0] === currentPos.facing
     })
 
+    if(!nextMove)
+        throw new Error("Can't have a next move when you don't have a first.")
+        
     let newPosition = Util.getNewPoint(currentPos.coordinates, nextMove.move)
 
     return (newPosition[0] > -1 && newPosition[1] > -1

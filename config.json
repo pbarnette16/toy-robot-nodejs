@@ -1,6 +1,6 @@
 {
     "development": {
         "grid": [5,5],
-        "announce": false
+        "announce": true
     }
 }

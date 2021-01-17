@@ -189,7 +189,7 @@ describe('Testing Values sent to the robot MOVE command valid and invalid', () =
                 
             })
             .catch(e => {
-                return expect.objectContaining({ msgType: 'error', msg: 'Whay are you trying to get me killed?' })
+                return expect.objectContaining({ msgType: 'error', msg: 'Validation error: Can\t have a next move when you don\'t have a first.' })
             })
             
         });

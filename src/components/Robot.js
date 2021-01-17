@@ -87,23 +87,17 @@ class Robot{
             })
 
             let outputObj =  this[currentAction.action]({"command": robotInputLocal, "currentAction": currentAction})
-
-            if(this.announce) {
-                Messaging.emit(outputObj.msgType, outputObj.msg)
+            this.outputObj = outputObj;
+            
+            if(Array.isArray(outputObj) && outputObj[0].msgType === "error" || outputObj.msgType === "error") {
+                return Promise.reject(this.outputObj)
             }
-            else {
-                this.outputObj = outputObj;
+            else
                 return Promise.resolve(this.outputObj);
-                
-            }
+
         }
         else {
-            if(this.announce) {
-                Messaging.emit("error", `Oh you think you can sneak the "${robotInputLocal}" command past me`)
-            }
-            else {
-                return Promise.reject({msgType: "error", msg: `Oh you think you can sneak the "${robotInputLocal}" command past me`})
-            }
+            return Promise.reject({msgType: "error", msg: `Oh you think you can sneak the "${robotInputLocal}" command past me`})
         }
 
     }
@@ -197,21 +191,26 @@ class Robot{
     }
 
     move(commandObj) {
-        let valid = null,
-        command = commandObj.command
+        let valid = null;
+        let newPosition = null;
+        let command = commandObj.command
         try {
             valid = this.runValidation(command, commandObj.currentAction.validation);
         }
         catch(e) {
-            return Promise.reject({msgType: "error", msg: "Move Error:" + e.message});
+            return {msgType: "error", msg: "Move Error:" + e.message};
         }
 
         let nextMove = Move.moveVector.find((ele) => {
             return ele.facing === this.currentPos.facing || ele.facing[0] === this.currentPos.facing
         })
     
-        let newPosition = Util.getNewPoint(this.currentPos.coordinates, nextMove.move)
-
+        if(nextMove)
+            newPosition = Util.getNewPoint(this.currentPos.coordinates, nextMove.move)
+        else {
+            // Valid threw an error and now we need to bubble it up
+            return valid;
+        }
             // iterate over the valid array to see if we find a false
             // if no false is found undefined will be returned
         if(!valid.hasOwnProperty("msgType") && valid.find(ele => ele === false) === undefined) {

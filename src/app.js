@@ -48,11 +48,29 @@ const readInput = () => {
             if(!Validation.isHelpCommand(command)) {
                 // sends the command to the robot to process
                 robot.commandController(command)
-                .then(data => {
-                  console.log(data)
+                .then(outputObj => {
+                  if(robot.announce) {
+                    Messaging.emit(outputObj.msgType, outputObj.msg)
+                  }
+                  else {
+                    console.log(outputObj)
+                  }
                 })
                 .catch(e => {
-                  console.log(e)
+                  if(robot.announce) {
+                    if(Array.isArray(e)) {
+                      e.forEach(item => {
+                        Messaging.emit(item.msgType, item.msg)
+                      })
+                    }
+                    else {
+                      Messaging.emit(e.msgType, e.msg)
+                    }
+                    
+                  }
+                  else {
+                    console.log(e)
+                  }
                 })
             }
             else {
