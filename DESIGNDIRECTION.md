@@ -33,7 +33,7 @@ The Grid knows how to be created. And it will return the current grid size in an
 The robot is the workhorse of the project. The robot is built as a singleton as there is only need for one robot in the application. The robot has also been built using the observer model and receives messages from the command line to act upon.
 
 The robot responds to the following commands: Place, Move, Left, Right, Report.
-In order to decouple the application from the commands. They exist in a seperate file for updating or changing the type of validation involved.
+In order to decouple the application from the commands. They exist in a separate file for updating or changing the type of validation involved.
 
 This is an example from the command file.
 ```{
@@ -66,15 +66,25 @@ Place command things that could go wrong:
 
 If at any point the command or validation needs to be update. This is more easily done as it is decoupled.
 
-### Testing
-The project has been tested using Jest. This is one area where I know I could use more work. Testing a website is one thing but a command line interface is a completely different beast. One that i've never done before I tried it here.
-Actually writing a command line interface i've never done before either.
+#### The commands for validation
+Each of the commands from the command structure contains a validation array which is similar to this:
+validation: ['isFacingValueValid', 'isPositionValid']
 
-There are a lot of test, however, most of them fail and this is because using a pub/sub system for the Robot Controller. Im sure once i've seen how to test it properly i'd be okay in doing it again.
+When the Place command is run, the validation array will check the validations contained in its array.
+Place will test isFacingValueValid and isPositionValid. If a new validation needs to be added, this is easily done as long as the function for validation is referenced in the validation.js file.
+
+### Testing
+The project has been tested using Jest as it is the easiest and most complete testing solution out currently.
+With a tab open and set to watch for any updates to the testing suite it was easy to tell if any changes to the code would cause any regressions to the expected results.
+
+The tests are broken down into 3 major files
+- Grid
+- Robot commands
+- Sample input
 
 #### Breakdown
 Grid: The grid has one test file which test the size of the grid and the output from a grid declaration. 
 
 Robot: The robot has two test files. One a input test which was previously given in the challenge the other unit tests around all of the commands.
 
-Should there be tests for the validation. Absolutely are they missing. Yep. I will continue to work on this solution until I think it is in an even better space with code coverage and other types of testing as well.
+Sample Input: This file tests the sample input that was provided as part of the coding instructions.

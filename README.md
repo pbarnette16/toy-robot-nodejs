@@ -75,6 +75,9 @@ All other commands given to the robot will result in the robot ignoring your com
 This project is done as a command line interface in able to allow the developer to have a bit of interactivity. As a front-end developer it feels strange to me to not have some kind of interface. 
 [Read about the development directions.](DESIGNDIRECTION.md)
 
+## Change Log
+[Change Log](CHANGELOG.md) This file contains a list of all the major changes in this release.
+
 
 ## Available Scripts
 
