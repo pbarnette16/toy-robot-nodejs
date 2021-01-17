@@ -49,7 +49,6 @@ const readInput = () => {
                 // sends the command to the robot to process
                 robot.commandController(command)
                 .then(data => {
-                  console.log("I got to the then!")
                   console.log(data)
                 })
                 .catch(e => {

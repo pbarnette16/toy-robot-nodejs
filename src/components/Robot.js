@@ -99,7 +99,7 @@ class Robot{
         }
         else {
             if(this.announce) {
-                Messaging.emit("error", `Oh you think you can sneak the ${robotInputLocal} command past me`)
+                Messaging.emit("error", `Oh you think you can sneak the "${robotInputLocal}" command past me`)
             }
             else {
                 return Promise.reject({msgType: "error", msg: `Oh you think you can sneak the "${robotInputLocal}" command past me`, errorType: "command"})
@@ -170,7 +170,7 @@ class Robot{
             // if the index is -1 it couldnt find the current direction
             // this is an error
             if(index === -1) {
-                return {msgType: "error", msg: "Rotate Error: How did that direction slip through?"};
+                return Promise.reject({msgType: "error", msg: "Rotate Error: How did that direction slip through?"});
             }
 
             // reached the end of the directions vector, wrap around
@@ -191,7 +191,7 @@ class Robot{
         }
         else {
             // The robot is not on the grid
-            return {msgType: "error", msg :"Rotate Error: Naughty naughty, I'm not on the grid!"}
+            return Promise.reject({msgType: "error", msg :"Rotate Error: Naughty naughty, I'm not on the grid!"});
         }
 
     }
@@ -203,7 +203,7 @@ class Robot{
             valid = this.runValidation(command, commandObj.currentAction.validation);
         }
         catch(e) {
-            return {msgType: "error", msg: "Move Error:" + e.message};
+            return Promise.reject({msgType: "error", msg: "Move Error:" + e.message});
         }
 
             // iterate over the valid array to see if we find a false
@@ -218,7 +218,7 @@ class Robot{
             return this.addPlacement(newPosition, this.currentPos.facing)
         }
         else {
-            return {msgType: "error", msg: "Whay are you trying to get me killed?"};
+            return Promise.reject({msgType: "error", msg: "Whay are you trying to get me killed?"});
         }
 
     }
@@ -244,7 +244,7 @@ class Robot{
         }
         catch(e) {
             //console.log("validation threw an error: " + e.message)
-            return {msgType: "error", msg: "Validation error: " + e.message}
+            return {msgType: "error", msg: "Validation error: " + e.message};
             
         }
         

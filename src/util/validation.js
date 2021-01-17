@@ -18,9 +18,14 @@ function isValidCommand(req) {
 function isFacingValueValid(req) {
     //console.log("req facing direction")
     let direction = Util.getDirection(req)
-    return move.moveVector.find((obj) =>{
+    let found =  move.moveVector.find((obj) =>{
         return obj.facing === direction || obj.facing[0] === direction
-    } ) || false
+    }) || false
+    
+    if(found)
+        return found
+    else
+        throw new Error(`${direction} isn't that over in that direction that way.`)
 }
 
 // is grid position valid
@@ -33,12 +38,12 @@ function isPositionValid(req, gridDim) {
             return true;
         }
          else {
-            throw new Error("Seriously that's the Y cordinate you wanted.")
+            throw new Error(`Seriously that's the Y coordinate (${newPoint[1]}) you wanted.`)
          }
             
     }
     else {
-            throw new Error("Well that X cordinate isn't going to work.")
+            throw new Error(`Well that X coordinate (${newPoint[0]}) isn't going to work. You're outside the board`)
     }
             
 
@@ -65,7 +70,7 @@ function isHelpCommand(req) {
 }
 
 
-// creates a validaiton object to be exported and namespace the functions
+// creates a validation object to be exported and namespace the functions
 const Validation = {
     isValidCommand: isValidCommand,
     isFacingValueValid: isFacingValueValid,
@@ -91,7 +96,7 @@ function getPoints(req) {
 // Util function that uses a regex to return the points and direction
 // filters out any null strings
 function getPointsAndDirection(req) {
-    return req.split(/PLACE\s([-]?\d)[,]([-]?\d)[,](\w)/ig)
+    return req.split(/PLACE\s([-]?\d)[,]([-]?\d)[,](\w*)/ig)
                 .filter(ele => ele.length > 0)
 }
 

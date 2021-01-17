@@ -25,7 +25,7 @@ describe('Creation of a Robot', () => {
 
     test('checking to see if a [5,5] grid is sent to the robot constructor', () => {
         robot = new Robot({'x':5,'y':5}, false)
-        expect(robot).toBeInstanceOf(Robot.Robot);
+        expect(robot).toBeInstanceOf(Robot);
     });
     
 });
@@ -40,55 +40,104 @@ describe('Testing Values sent to the robot PLACE command valid and invalid', () 
     describe('Robot: Testing of the PLACE command', () => {
         beforeEach(() => {
             robot = new Robot({'x':5,'y':5}, false);
-            handler = jest.fn();
-            handlerMsg = jest.fn();
         });
 
         test('Robot: Place: Plaxe bad command', () => {
             
-            robot.on("commandController", handler)
-            robot.emit("commandController", "Plaxe 1,1,N")
+            robot.commandController("Plaxe 1,1,N")
+            .then(data =>{
 
-            expect(handler).toBeCalledTimes(1)
-            expect(handler).toBeCalledWith("Plaxe 1,1,N")
+            })
+            .catch(e => {
+                return expect(e).objectContaining({
+                    msgType: 'error',
+                    msg: 'Oh you think you can sneak the PLAXE 1,1,N command past me'
+                  })
+            })
 
-           // expect(handlerMsg).toBeCalledWith("Command error: Did you really think that command would work on me?")
 
-           
-            //expect(handler.value).toBe('return value');
         });
         
         test('Robot: Place: Place bad location [-1,-1]', () => {
-            robot.on("commandController", handler)
-            robot.emit("commandController", "Place -1,-1,N")
 
-            expect(handler).toBeCalledTimes(1)
-            expect(handler).toBeCalledWith("Place -1,-1,N")
-            
-            console.log(handler.expect);
+            robot.commandController("Place -1,-1,N")
+            .then(data =>{
+
+            })
+            .catch(e => {
+                return expect(e).objectContaining([
+                    {
+                      msgType: 'error',
+                      msg: "Validation error: Well that X coordinate (-1) isn't going to work. You're outside the board"
+                    }
+                  ])
+            })
             
         });
 
         test('Robot: Place: Place bad location [0,-1]', ()=>{
-            expect(()=> {
-                robot.emit("commandController", "Place 0,-1,N")
-            }).toThrow("You didn't think you'd slip that command past me did you?")
+            
+            robot.commandController("Place 0,-1,N")
+            .then(data =>{
+
+            })
+            .catch(e => {
+                return expect(e).objectContaining([
+                    {
+                      msgType: 'error',
+                      msg: "Validation error: Seriously that's the Y coordinate (-1) you wanted."
+                    }
+                  ])
+            })
+            
         })
 
         test('Robot: Place: Place bad location [5,5] outside the board', ()=>{
-            expect(()=> {
-                robot.emit("commandController", "Place 0,-1,N")
-            }).toThrow("You didn't think you'd slip that command past me did you?")
+            
+            robot.commandController("Place 5,5,N")
+            .then(data =>{
+
+            })
+            .catch(e => {
+                return expect(e).objectContaining([
+                    {
+                      msgType: 'error',
+                      msg: "Validation error: Well that X coordinate (5) isn't going to work. You're outside the board"
+                    }
+                  ])
+            })
         })
 
         test('Robot: Place: Place bad Direction Flark', ()=>{
-            expect(()=> {
-                robot.emit("commandController", "Place 0,0,Flark")
-            }).toThrow("You didn't think you'd slip that command past me did you?")
+
+            robot.commandController("Place 0,0,Flark")
+            .then(data =>{
+
+            })
+            .catch(e => {
+                return expect(e).objectContaining([
+                    {
+                      msgType: 'error',
+                      msg: "Validation error: Flark isn't that over in that direction that way."
+                    }
+                  ])
+            })
         })
 
         test('Robot: Place: Place Good location', ()=>{
-            expect(robot.emit("commandController", "Place 0,0,N")).stringContaining("I am now at [0,0] and facing N")
+
+            robot.commandController("Place 0,0,N")
+            .then(data =>{
+                return expect(e).objectContaining([
+                    {
+                      msgType: 'success',
+                      msg: "I am now at [0,0] and facing N"
+                    }
+                  ])
+            })
+            .catch(e => {
+                
+            })
         })
 
     })
@@ -103,14 +152,24 @@ describe('Testing Values sent to the robot MOVE command valid and invalid', () =
 
     describe('Robot: Testing of the move command which is on the board.', () => {
         beforeEach(() => {
-            robot = new Robot({'x':5,'y':5});
-            robot.emit("commandController", "Place 0,0,N")
+            robot = new Robot({'x':5,'y':5}, false);
+            robot.commandController("Place 0,0,N")
         });
 
         test('Robot: Place: Move', () => {
-            expect( () => {
-                robot.emit("commandController", "Move")
-            }).stringContaining("I am now at [0,1] and facing N")
+            
+            robot.commandController("Place 0,0,N")
+            .then(data =>{
+                return expect(e).objectContaining([
+                    {
+                      msgType: 'success',
+                      msg: "I am now at [0,1] and facing N"
+                    }
+                  ])
+            })
+            .catch(e => {
+                
+            })
         });
         
 
