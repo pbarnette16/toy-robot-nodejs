@@ -6,12 +6,12 @@ describe('Testing of the example input/output', () => {
         robot = new Robot({'x':5,'y':5}, false);
     });
 
-     test('Example Input 1', () => {
+     test('Example Input 1', async () => {
 
 
         robot.commandController("Place 0,0,N")
         .then(data => {
-            return expect(data).objectContaining({ msgType: 'success', msg: 'I am now at [0,0] and facing N'});
+            return expect.objectContaining({ msgType: "success", msg: "I am now at [0,0] and facing N"});
         })
         .catch(e => {
 
@@ -19,7 +19,7 @@ describe('Testing of the example input/output', () => {
 
         robot.commandController("Move")
         .then(data => {
-            return expect(data).objectContaining({ msgType: 'success', msg: 'I am now at [0,1] and facing N' });
+            return expect.objectContaining({ msgType: "success", msg: "I am now at [0,1] and facing N" });
         })
         .catch(e => {
 
@@ -27,7 +27,7 @@ describe('Testing of the example input/output', () => {
 
         robot.commandController("Report")
         .then(data => {
-            return expect(data).objectContaining({ msgType: 'success', msg: '0,1,N' });
+            return expect.objectContaining({ msgType: "success", msg: "0,1,N" });
         })
         .catch(e => {
 
@@ -35,10 +35,11 @@ describe('Testing of the example input/output', () => {
 
     });
 
-    test('Example Input 2', () => {
+    test('Example Input 2', async () => {
+
         robot.commandController("Place 0,0,N")
         .then(data => {
-            return expect(data).objectContaining({ msgType: 'success', msg: 'I am now at [0,0] and facing N'});
+            return expect.objectContaining({ msgType: "success", msg: "I am now at [0,0] and facing N"});
         })
         .catch(e => {
 
@@ -46,7 +47,7 @@ describe('Testing of the example input/output', () => {
 
         robot.commandController("Left")
         .then(data => {
-            return expect(data).objectContaining({ msgType: 'success', msg: 'I am now at [0,0] and facing West'});
+            return expect.objectContaining({ msgType: 'success', msg: 'I am now at [0,0] and facing West'});
         })
         .catch(e => {
 
@@ -54,7 +55,7 @@ describe('Testing of the example input/output', () => {
 
         robot.commandController("Report")
         .then(data => {
-            return expect(data).objectContaining({ msgType: 'success', msg: '0,0,WEST'});
+            return expect.objectContaining({ msgType: 'success', msg: '0,0,WEST'});
         })
         .catch(e => {
 
@@ -62,11 +63,11 @@ describe('Testing of the example input/output', () => {
         
     });
 
-    test('Example Input 3', () => {
+    test('Example Input 3', async () => {
 
         robot.commandController("Place 1,2,E")
         .then(data => {
-            return expect(data).objectContaining({ msgType: 'success', msg: 'I am now at [1,2] and facing E'});
+            return expect.objectContaining({ msgType: 'success', msg: 'I am now at [1,2] and facing E'});
         })
         .catch(e => {
 
@@ -74,7 +75,7 @@ describe('Testing of the example input/output', () => {
 
         robot.commandController("Move")
         .then(data => {
-            return expect(data).objectContaining({ msgType: 'success', msg: 'I am now at [2,2] and facing E'});
+            return expect.objectContaining({ msgType: 'success', msg: 'I am now at [2,2] and facing E'});
         })
         .catch(e => {
 
@@ -82,7 +83,7 @@ describe('Testing of the example input/output', () => {
 
         robot.commandController("Move")
         .then(data => {
-            return expect(data).objectContaining({ msgType: 'success', msg: 'I am now at [3,2] and facing E'});
+            return expect.objectContaining({ msgType: 'success', msg: 'I am now at [3,2] and facing E'});
         })
         .catch(e => {
 
@@ -90,7 +91,7 @@ describe('Testing of the example input/output', () => {
 
         robot.commandController("Left") // look into why the whole word is spit out
         .then(data => {
-            return expect(data).objectContaining({ msgType: 'success', msg: 'I am now at [3,2] and facing NORTH'});
+            return expect.objectContaining({ msgType: 'success', msg: 'I am now at [3,2] and facing NORTH'});
         })
         .catch(e => {
 
@@ -98,7 +99,7 @@ describe('Testing of the example input/output', () => {
 
         robot.commandController("move") // look into why the whole word is spit out
         .then(data => {
-            return expect(data).objectContaining({ msgType: 'success', msg: 'I am now at [3,3] and facing NORTH'});
+            return expect.objectContaining({ msgType: 'success', msg: 'I am now at [3,3] and facing NORTH'});
         })
         .catch(e => {
 
@@ -106,12 +107,11 @@ describe('Testing of the example input/output', () => {
 
         robot.commandController("report")
         .then(data => {
-            return expect(data).objectContaining({ msgType: 'success', msg: '3,3,NORTH'});
+            return expect.objectContaining({ msgType: 'success', msg: '3,3,NORTH'});
         })
         .catch(e => {
 
         })
         
     });
-
 })

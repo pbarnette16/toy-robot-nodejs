@@ -102,7 +102,7 @@ class Robot{
                 Messaging.emit("error", `Oh you think you can sneak the "${robotInputLocal}" command past me`)
             }
             else {
-                return Promise.reject({msgType: "error", msg: `Oh you think you can sneak the "${robotInputLocal}" command past me`, errorType: "command"})
+                return Promise.reject({msgType: "error", msg: `Oh you think you can sneak the "${robotInputLocal}" command past me`})
             }
         }
 
@@ -170,7 +170,7 @@ class Robot{
             // if the index is -1 it couldnt find the current direction
             // this is an error
             if(index === -1) {
-                return Promise.reject({msgType: "error", msg: "Rotate Error: How did that direction slip through?"});
+                return {msgType: "error", msg: "Rotate Error: How did that direction slip through?"};
             }
 
             // reached the end of the directions vector, wrap around
@@ -191,7 +191,7 @@ class Robot{
         }
         else {
             // The robot is not on the grid
-            return Promise.reject({msgType: "error", msg :"Rotate Error: Naughty naughty, I'm not on the grid!"});
+            return {msgType: "error", msg :"Rotate Error: Naughty naughty, I'm not on the grid!"};
         }
 
     }
@@ -206,19 +206,23 @@ class Robot{
             return Promise.reject({msgType: "error", msg: "Move Error:" + e.message});
         }
 
+        let nextMove = Move.moveVector.find((ele) => {
+            return ele.facing === this.currentPos.facing || ele.facing[0] === this.currentPos.facing
+        })
+    
+        let newPosition = Util.getNewPoint(this.currentPos.coordinates, nextMove.move)
+
             // iterate over the valid array to see if we find a false
             // if no false is found undefined will be returned
         if(!valid.hasOwnProperty("msgType") && valid.find(ele => ele === false) === undefined) {
-            let nextMove = Move.moveVector.find((ele) => {
-                return ele.facing === this.currentPos.facing || ele.facing[0] === this.currentPos.facing
-            })
-        
-            let newPosition = Util.getNewPoint(this.currentPos.coordinates, nextMove.move)
-
             return this.addPlacement(newPosition, this.currentPos.facing)
         }
         else {
-            return Promise.reject({msgType: "error", msg: "Whay are you trying to get me killed?"});
+            if(newPosition[0] > this.gridSize[0]-1 || newPosition[1] > this.gridSize[1]-1 ||
+                newPosition[0] < 0 || newPosition[1] < 0)
+                return {msgType: "error", msg: "Im fallllling! Nah I'm not going anywhere."};
+            else
+                return {msgType: "error", msg: "Whay are you trying to get me killed?"};
         }
 
     }
