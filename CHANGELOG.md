@@ -1,6 +1,6 @@
-#Change Log V1
+# Change Log V1
 
-##Fixed
+## Fixed
 - Fixed issue where the app was prescreening the inputs for the robot
 - Fixed the issue where testing was failing
 - Fixed issue with the regex which parsed the place command to return whatever the input direction was
