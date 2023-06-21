@@ -15,7 +15,7 @@
   "author": "Paul Barnette",
   "license": "ISC",
   "dependencies": {
-    "chalk": "^4.1.0",
+    "chalk": "^5.0.0",
     "commander": "^6.2.0",
     "node-typewriter": "^0.0.2"
   },
